@@ -1,0 +1,124 @@
+ 
+                      KHAREENA SHAIK_1033335
+--problem statement 1
+
+select name,listprice 
+--selects name and listprice from the table
+from Production.product
+
+--problem statement 2
+
+select concat(pp.firstname,'',pp.lastname)as name,ea.emailaddress
+--concatenated firstname and lastname to display it as name
+from person.person as pp
+--applying inner join so that the data from city seattle will be displayed
+inner join person.EmailAddress as ea on pp.BusinessEntityID=ea.BusinessEntityID
+--inner join and join are same
+inner join person.Address as pa on pp.BusinessEntityID=pa.AddressID
+inner join sales.Customer as sc on pp.BusinessEntityID=sc.PersonID
+where pa.city='seattle'
+
+--problem statement 3
+
+select pp.name as productname,sum(orderqty*unitprice) as totalsalesamt
+--formula for calculating the salesamt 
+from Sales.SalesOrderDetail as sd
+--applying inner join for both tables to retrieve data
+inner join Production.Product as pp on sd.ProductID=pp.ProductID
+--filters records where productid=793
+where sd.ProductID=793
+--grups the results for the product name
+group by pp.name
+
+--problem statement 4
+
+select hrd.name ,hr.jobtitle
+--selecting the name and jobtitle to be displayed as columns in the table
+from HumanResources.Department as hrd
+--here applying inner join for the 2 tables
+inner join HumanResources.Employee as hr
+on hrd.DepartmentID=hr.BusinessEntityID
+--arranges the jobtitle in the ascending order
+order by JobTitle asc
+
+--problem statement 5
+
+select pp.name as productname , sd.orderqty as quantities
+--alias is used to rename the columns
+from sales.SalesOrderHeader as she
+inner join sales.SalesOrderDetail as sd on sd.SalesOrderID=she.SalesOrderID
+inner join Production.Product as pp on sd.ProductID=pp.ProductID
+--where is the condition given to display only customerid =29485
+where she.CustomerID=29485
+
+--problem statement 6
+select * from sales.SalesOrderHeader
+select * from sales.SalesPerson
+select * from HumanResources.Employee
+select * from person.person
+
+select sh.salesordernumber as ordernumber, sh.orderdate, 
+concat(pp.firstname, ' ' ,pp.lastname) as customername 
+--concatinating the firstname  and lastname
+from sales.SalesOrderHeader as sh
+inner join sales.SalesPerson as sp on sh.salespersonid=sp.BusinessEntityID 
+inner join HumanResources.Employee as hr on sp.BusinessEntityID=hr.BusinessEntityID 
+--leftjoin to display he records from the left table
+left join person.Person as pp on sh.customerid=pp.BusinessEntityID
+where hr.BusinessEntityID= 276
+
+
+--problem statement 7
+
+select concat(pp.firstname, '' , pp.lastname) as Name ,pa.EmailAddress
+from person.person as pp
+--leftjoin to display he records from the left table
+left join sales.SalesOrderheader as she on pp.BusinessEntityID=she.CustomerID
+left join person.EmailAddress as pa on pp.BusinessEntityID=pa.BusinessEntityID
+--null condition for to display the not placed any orders in the table
+where she.CustomerID is null
+
+--problem statement 8
+
+select psub.name as categoryname , avg(sd.orderqty*sd.unitprice) as avgsalesamt
+from Production.Productcategory as ppc
+--inner join combines the rows from two or more tables
+inner join Production.ProductSubcategory as psub on ppc.ProductCategoryID=psub.ProductCategoryID
+inner join Production.Product as pp on psub.ProductSubcategoryID=pp.ProductSubcategoryID
+inner join sales.SalesOrderDetail as sd on pp.ProductID=sd.ProductID
+--presents the data in the organised way
+group by psub.name
+
+--problem statement 9
+select  pa.name,sum(sd.orderqty) as quantitysold
+from Production.Product as pa
+inner join sales.SalesOrderDetail as sd on pa.ProductID=sd.ProductID
+group by pa.name
+order by quantitysold desc 
+--offset indicates the start from the 0th row 
+offset 0 rows
+--allows you to retrieve only 1st 10 rows
+fetch first 10 rows only;
+
+--problem statement 10
+--selects to display as columns in table
+select salesordernumber as ordernumber,OrderDate as requesteddate,shipdate as actualdate
+from sales.SalesOrderHeader
+--shipped after the requested date condition using where
+where ShipDate < DueDate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
